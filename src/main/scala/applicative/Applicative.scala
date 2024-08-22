@@ -8,16 +8,13 @@ trait Applicative[F[_]] extends Functor[F] {
 }
 
 object Applicative {
-  def ap[F[_], A, B](ff: F[A => B])(fa: F[A])(implicit
-      applicative: Applicative[F]
-  ): F[B] = applicative.ap(ff)(fa)
+  def ap[F[_]: Applicative, A, B](ff: F[A => B])(fa: F[A]): F[B] =
+    implicitly[Applicative[F]].ap(ff)(fa)
 
-  def pure[F[_], A](a: A)(implicit applicative: Applicative[F]) =
-    applicative.pure(a)
+  def pure[F[_]: Applicative, A](a: A) =
+    implicitly[Applicative[F]].pure(a)
 
-  implicit class ApplicativeOpsAp[F[_], A, B](ff: F[A => B])(implicit
-      applicative: Applicative[F]
-  ) {
-    def <*>(fa: F[A]): F[B] = applicative.ap(ff)(fa)
+  implicit class ApplicativeOpsAp[F[_]: Applicative, A, B](ff: F[A => B]) {
+    def <*>(fa: F[A]): F[B] = implicitly[Applicative[F]].ap(ff)(fa)
   }
 }

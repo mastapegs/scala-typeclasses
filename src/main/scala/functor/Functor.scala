@@ -5,7 +5,7 @@ trait Functor[F[_]] {
 }
 
 object Functor {
-  implicit class FunctorOps[F[_], A](fa: F[A])(implicit functor: Functor[F]) {
-    def map[B](f: A => B): F[B] = functor.map(fa)(f)
+  implicit class FunctorOps[F[_]: Functor, A](fa: F[A]) {
+    def map[B](f: A => B): F[B] = implicitly[Functor[F]].map(fa)(f)
   }
 }
