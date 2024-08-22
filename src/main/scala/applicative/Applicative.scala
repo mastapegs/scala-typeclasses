@@ -15,6 +15,6 @@ object Applicative {
     implicitly[Applicative[F]].pure(a)
 
   implicit class ApplicativeOpsAp[F[_]: Applicative, A, B](ff: F[A => B]) {
-    def <*>(fa: F[A]): F[B] = implicitly[Applicative[F]].ap(ff)(fa)
+    def <*>(fa: F[A]): F[B] = ap(ff)(fa)
   }
 }
