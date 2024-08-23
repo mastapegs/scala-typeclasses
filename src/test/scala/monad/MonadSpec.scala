@@ -24,4 +24,10 @@ class MonadSpec extends munit.FunSuite {
     val expected = TestClass(9)
     assertEquals(obtained, expected)
   }
+
+  test("can use bind/chain/flatMap shorthand (>>=)") {
+    val obtained = TestClass(7) `>>=` (x => TestClass(x + 2))
+    val exptected = TestClass(9)
+    assertEquals(obtained, exptected)
+  }
 }

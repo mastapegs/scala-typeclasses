@@ -9,5 +9,6 @@ trait Monad[F[_]] extends Applicative[F] {
 object Monad {
   implicit class MonadOps[F[_]: Monad, A](fa: F[A]) {
     def flatMap[B](f: A => F[B]): F[B] = implicitly[Monad[F]].flatMap(fa)(f)
+    def `>>=`[B](f: A => F[B]): F[B] = flatMap(f)
   }
 }
