@@ -3,6 +3,8 @@ package functor
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop.forAll
 import munit.ScalaCheckSuite
+import org.scalacheck.Gen
+import org.scalacheck.Cogen
 
 class FunctorSpec extends ScalaCheckSuite {
   import Functor._
@@ -19,10 +21,10 @@ class FunctorSpec extends ScalaCheckSuite {
     Arbitrary(Arbitrary.arbitrary[A].map(TestClass(_)))
 
   // Arbitrary Functions for composition law
-  implicit def arbitraryFunctions[A: Arbitrary, B: Arbitrary]
-      : Arbitrary[A => B] = Arbitrary(
-    Arbitrary.arbitrary[B].map(b => (_: A) => b)
-  )
+  implicit def arbitraryFunction[A: Cogen, B: Arbitrary]: Arbitrary[A => B] = {
+    val genB = Arbitrary.arbitrary[B]
+    Arbitrary(Gen.function1[A, B](genB))
+  }
 
   test("functors can map") {
     val obtained = TestClass(3).map(_ * 2)
