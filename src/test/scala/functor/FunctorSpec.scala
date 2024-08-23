@@ -21,4 +21,16 @@ class FunctorSpec extends munit.FunSuite {
     val expected = TestClass(6)
     assertEquals(obtained, expected)
   }
+
+  test("upholds functor identity law") {
+    val obtained = FunctorLaws.identity(TestClass(17))
+    val expected = true
+    assertEquals(obtained, expected)
+  }
+
+  test("upholds composition law") {
+    val obtained = FunctorLaws.composition(TestClass(3))(_ * 2)(_ + 3)
+    val expected = true
+    assertEquals(obtained, expected)
+  }
 }
