@@ -15,4 +15,10 @@ class FunctorSpec extends munit.FunSuite {
     val expected = TestClass(6)
     assertEquals(obtained, expected)
   }
+
+  test("use shorthand map infix") {
+    val obtained = TestClass(4) `<$>` (_ + 2)
+    val expected = TestClass(6)
+    assertEquals(obtained, expected)
+  }
 }
