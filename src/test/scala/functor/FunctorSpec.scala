@@ -1,6 +1,10 @@
 package functor
 
-class FunctorSpec extends munit.FunSuite {
+import org.scalacheck.Arbitrary
+import org.scalacheck.Prop.forAll
+import munit.ScalaCheckSuite
+
+class FunctorSpec extends ScalaCheckSuite {
   import Functor._
 
   case class TestClass[A](value: A)
@@ -9,6 +13,16 @@ class FunctorSpec extends munit.FunSuite {
       f(fa.value)
     )
   }
+
+  // Arbitrary TestClass
+  implicit def arbitraryTestClass[A: Arbitrary]: Arbitrary[TestClass[A]] =
+    Arbitrary(Arbitrary.arbitrary[A].map(TestClass(_)))
+
+  // Arbitrary Functions for composition law
+  implicit def arbitraryFunctions[A: Arbitrary, B: Arbitrary]
+      : Arbitrary[A => B] = Arbitrary(
+    Arbitrary.arbitrary[B].map(b => (_: A) => b)
+  )
 
   test("functors can map") {
     val obtained = TestClass(3).map(_ * 2)
@@ -28,9 +42,11 @@ class FunctorSpec extends munit.FunSuite {
     assertEquals(obtained, expected)
   }
 
-  test("upholds composition law") {
-    val obtained = FunctorLaws.composition(TestClass(3))(_ * 2)(_ + 3)
-    val expected = true
-    assertEquals(obtained, expected)
+  property("upholds functor composition law") {
+    forAll { (tc: TestClass[Int], f: Int => String, g: String => Double) =>
+      val obtained = FunctorLaws.composition(tc)(f)(g)
+      val expected = true
+      assertEquals(obtained, expected)
+    }
   }
 }
