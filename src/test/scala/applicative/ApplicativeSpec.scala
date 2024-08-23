@@ -8,12 +8,7 @@ class ApplicativeSpec extends munit.FunSuite {
     new Applicative[TestClass] {
       def pure[A](a: A): TestClass[A] = TestClass(a)
       def ap[A, B](ff: TestClass[A => B])(fa: TestClass[A]): TestClass[B] =
-        ff match {
-          case TestClass(f) => map(fa)(f)
-        }
-      def map[A, B](fa: TestClass[A])(f: A => B): TestClass[B] = fa match {
-        case TestClass(value) => TestClass(f(value))
-      }
+        TestClass(ff.value(fa.value))
     }
 
   test("can use pure") {

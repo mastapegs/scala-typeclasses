@@ -3,20 +3,14 @@ package monad
 class MonadSpec extends munit.FunSuite {
   import Monad._
 
-  case class TestClass[A](a: A)
+  case class TestClass[A](value: A)
   implicit val MonadTestClass: Monad[TestClass] = new Monad[TestClass] {
-    def map[A, B](fa: TestClass[A])(f: A => B): TestClass[B] = fa match {
-      case TestClass(a) => TestClass(f(a))
-    }
     def pure[A](a: A): TestClass[A] = TestClass(a)
     def ap[A, B](ff: TestClass[A => B])(fa: TestClass[A]): TestClass[B] =
-      ff match {
-        case TestClass(f) => map(fa)(f)
-      }
-    def flatMap[A, B](fa: TestClass[A])(f: A => TestClass[B]): TestClass[B] =
-      fa match {
-        case TestClass(a) => f(a)
-      }
+      TestClass(ff.value(fa.value))
+    def flatMap[A, B](fa: TestClass[A])(f: A => TestClass[B]): TestClass[B] = f(
+      fa.value
+    )
   }
 
   test("can flatmap") {

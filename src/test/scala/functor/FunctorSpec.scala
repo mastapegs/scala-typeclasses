@@ -5,9 +5,9 @@ class FunctorSpec extends munit.FunSuite {
 
   case class TestClass[A](value: A)
   implicit val TestClassFunctor: Functor[TestClass] = new Functor[TestClass] {
-    def map[A, B](fa: TestClass[A])(f: A => B): TestClass[B] = fa match {
-      case TestClass(value) => TestClass(f(value))
-    }
+    def map[A, B](fa: TestClass[A])(f: A => B): TestClass[B] = TestClass(
+      f(fa.value)
+    )
   }
 
   test("functors can map") {
