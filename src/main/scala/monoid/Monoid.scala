@@ -6,9 +6,16 @@ trait Semigroup[T] {
 
 object Semigroup {
   def apply[T: Semigroup](): Semigroup[T] = implicitly[Semigroup[T]]
-  implicit class SemigroupOps[S: Semigroup](s: S) {
-    def |+|(t: S): S = Semigroup[S].combine(s, t)
+  implicit class SemigroupOps[A: Semigroup](a: A) {
+    def |+|(b: A): A = Semigroup[A].combine(a, b)
   }
+}
+
+object SemigroupLaws {
+  import Semigroup.SemigroupOps
+
+  def associativity[A: Semigroup](a: A, b: A, c: A): Boolean =
+    ((a |+| b) |+| c) == (a |+| (b |+| c))
 }
 
 trait Monoid[T] extends Semigroup[T] {
@@ -17,4 +24,9 @@ trait Monoid[T] extends Semigroup[T] {
 
 object Monoid {
   def apply[T: Monoid]: Monoid[T] = implicitly[Monoid[T]]
+}
+
+object MonoidLaws {
+  import Semigroup.SemigroupOps
+  def identity[A: Monoid](a: A): Boolean = (a |+| Monoid[A].empty) == a
 }
