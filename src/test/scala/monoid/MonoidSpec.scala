@@ -6,7 +6,8 @@ import org.scalacheck.Prop.forAll
 import org.scalacheck.Arbitrary
 
 class MonoidSpec extends ScalaCheckSuite {
-  import monoid.Semigroup.SemigroupOps
+  import monoid.Semigroup._
+  import monoid.Monoid._
 
   case class TestClass[A](value: A)
 
@@ -31,9 +32,21 @@ class MonoidSpec extends ScalaCheckSuite {
     assertEquals(obtained, expected)
   }
 
+  test("list of semigroups can reduce") {
+    val obtained = List(1, 2, 3, 4).reduceAll
+    val expected = 24
+    assertEquals(obtained, expected)
+  }
+
   test("monoids have an identity associated with their combine") {
     val obtained = TestClass(7) |+| Monoid[TestClass[Int]].empty
     val expected = TestClass(7)
+    assertEquals(obtained, expected)
+  }
+
+  test("monoids have combineAll") {
+    val obtained = List(2, 3, 7).combineAll
+    val expected = 42
     assertEquals(obtained, expected)
   }
 

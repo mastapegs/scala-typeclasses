@@ -9,6 +9,10 @@ object Semigroup {
   implicit class SemigroupOps[A: Semigroup](a: A) {
     def |+|(b: A): A = Semigroup[A].combine(a, b)
   }
+  implicit class SemigroupOpsReduce[A: Semigroup](list: List[A]) {
+    def reduceAll(): A = Semigroup.reduceAll(list)
+  }
+  def reduceAll[A: Semigroup](list: List[A]): A = list.reduce(_ |+| _)
 }
 
 object SemigroupLaws {
@@ -23,7 +27,14 @@ trait Monoid[T] extends Semigroup[T] {
 }
 
 object Monoid {
+  import Semigroup.SemigroupOps
+
   def apply[T: Monoid]: Monoid[T] = implicitly[Monoid[T]]
+  implicit class MonoidOps[A: Monoid](list: List[A]) {
+    def combineAll(): A = list.foldLeft(Monoid[A].empty)(_ |+| _)
+  }
+  def combineAll[A: Monoid](list: List[A]): A =
+    list.foldLeft(Monoid[A].empty)(_ |+| _)
 }
 
 object MonoidLaws {
