@@ -5,9 +5,9 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / organization := "com.example"
 ThisBuild / organizationName := "example"
 
-lazy val root = (project in file("."))
+lazy val typeclasses = (project in file("typeclasses"))
   .settings(
-    name := "sandbox",
+    name := "typeclasses",
     libraryDependencies ++= Seq(
       munit % Test,
       scalacheck % Test,
@@ -15,4 +15,14 @@ lazy val root = (project in file("."))
     )
   )
 
-// See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.
+lazy val exampleApp = (project in file("example-app"))
+  .dependsOn(typeclasses)
+  .settings(
+    name := "example-app"
+  )
+
+lazy val root = (project in file("."))
+  .aggregate(typeclasses, exampleApp)
+  .settings(
+    name := "typeclasses-sandbox"
+  )
