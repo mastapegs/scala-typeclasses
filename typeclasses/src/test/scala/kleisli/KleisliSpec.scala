@@ -27,7 +27,7 @@ class KleisliSpec extends ScalaCheckSuite {
     val expected_none = None
     assertEquals(obtained_none, expected_none)
 
-    val obtained_some = kDoubleDiv24By.f(2) // 24 / 2 == 12. 24 / 12 == 2
+    val obtained_some = kDoubleDiv24By.f(2) // 24 / 2 == 12, 24 / 12 == 2
     val expected_some = Option(2.0)
     assertEquals(obtained_some, expected_some)
   }
