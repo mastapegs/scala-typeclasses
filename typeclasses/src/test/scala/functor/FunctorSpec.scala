@@ -6,7 +6,7 @@ import munit.ScalaCheckSuite
 import org.scalacheck.Gen
 import org.scalacheck.Cogen
 
-class FunctorSpec extends ScalaCheckSuite {
+class FunctorSpec extends ScalaCheckSuite { 
   import Functor._
 
   case class TestClass[A](value: A)
