@@ -19,6 +19,7 @@ class KleisliSpec extends ScalaCheckSuite {
     val div24By: Double => Option[Double] =
       (x: Double) => if (x == 0) None else Some(24 / x)
 
+    // Here, Kleisli Arrow (>=>) is being used to compose 2 monadic f's
     val doubleDiv24By: Double => Option[Double] = div24By >=> div24By
 
     val obtained_none = doubleDiv24By(0)
