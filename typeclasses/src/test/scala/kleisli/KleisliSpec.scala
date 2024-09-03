@@ -19,15 +19,14 @@ class KleisliSpec extends ScalaCheckSuite {
     val div24By: Double => Option[Double] =
       (x: Double) => if (x == 0) None else Some(24 / x)
 
-    val kDiv24By =
-      Kleisli[Option, Double, Double](div24By)
-    val kDoubleDiv24By: Kleisli[Option, Double, Double] = kDiv24By >=> kDiv24By
+    // Here, Kleisli Arrow (>=>) is being used to compose 2 monadic f's
+    val doubleDiv24By: Double => Option[Double] = div24By >=> div24By
 
-    val obtained_none = kDoubleDiv24By.f(0)
+    val obtained_none = doubleDiv24By(0)
     val expected_none = None
     assertEquals(obtained_none, expected_none)
 
-    val obtained_some = kDoubleDiv24By.f(2) // 24 / 2 == 12, 24 / 12 == 2
+    val obtained_some = doubleDiv24By(2) // 24 / 2 == 12, 24 / 12 == 2
     val expected_some = Option(2.0)
     assertEquals(obtained_some, expected_some)
   }
